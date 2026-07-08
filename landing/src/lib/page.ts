@@ -50,6 +50,12 @@ const ICONS = {
   check: icon(`<path d="M5 12.5l4.5 4.5L19 7.5"/>`),
 } as const;
 
+// ── Crystal badge icon ───────────────────────────────────────────────────────
+// A stylized faceted gem in the Obsidian purple family — drawn from scratch
+// (flat facet polygons), deliberately NOT the official Obsidian mark. If the
+// Obsidian team grants permission, the operator can swap in the official SVG.
+const CRYSTAL_ICON = `<svg class="crystal" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="8,4 16,4 15,10 9,10" fill="#9974F8"/><polygon points="8,4 9,10 3,10" fill="#8659EF"/><polygon points="16,4 21,10 15,10" fill="#8659EF"/><polygon points="9,10 15,10 12,21" fill="#6C31E3"/><polygon points="3,10 9,10 12,21" fill="#4B1FA6"/><polygon points="15,10 21,10 12,21" fill="#5A28C4"/><polygon points="9.5,5.2 12.5,5.2 11,8.2" fill="#C9B4FB"/></svg>`;
+
 // ── SEO structured data ──────────────────────────────────────────────────────
 
 function jsonLd(opts: PageOptions): string {
@@ -89,7 +95,8 @@ export function renderLandingPage(opts: PageOptions): string {
   const description =
     "Mirror your Alissa workspace into Obsidian: projects, tasks, context docs, deliverables, and entities as wikilinked markdown. Dependency trees and project hierarchies light up your graph view.";
   const canonicalUrl = `${baseUrl}/`;
-  const ogImageUrl = `${baseUrl}/static/alissa-verde.jpeg`;
+  // Branded 1200×630 card, generated at build time by scripts/generate-og.mjs.
+  const ogImageUrl = `${baseUrl}/static/og.png`;
 
   const stats: { icon: string; label: string }[] = [
     { icon: ICONS.file, label: "Real Markdown<br>Files" },
@@ -124,11 +131,15 @@ export function renderLandingPage(opts: PageOptions): string {
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(canonicalUrl)}">
 <meta property="og:image" content="${esc(ogImageUrl)}">
-<meta property="og:image:alt" content="Alissa Sync — Obsidian plugin">
-<meta name="twitter:card" content="summary">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="${esc(title)}">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${esc(ogImageUrl)}">
+<meta name="twitter:image:alt" content="${esc(title)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -144,6 +155,11 @@ export function renderLandingPage(opts: PageOptions): string {
     --ink-3: #75827C;          /* muted */
     --gold: #C8A969;           /* official gold — decorative, large type */
     --gold-deep: #94743B;      /* gold for small text (AA on marfil) */
+    /* Obsidian accent system — the purple is rationed to the conversion
+       moments (badge, primary CTA), matching the crystal on the OG card. */
+    --obsidian-purple: #6C31E3;
+    --obsidian-purple-hi: #9974F8;
+    --obsidian-purple-deep: #4B1FA6;
     --line: rgba(24, 36, 36, 0.14);
     --band-text: #EDE8DA;
     --band-text-2: #B9C2BB;
@@ -181,6 +197,10 @@ export function renderLandingPage(opts: PageOptions): string {
     letter-spacing: 0.14em;
     color: var(--gold-deep);
   }
+  .overline-crystal {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .overline-crystal .crystal { width: 18px; height: 18px; flex: none; }
 
   /* ── Masthead ─────────────────────────────────────────────────────────── */
   .masthead { text-align: center; padding: 2.4rem 1.5rem 0; }
@@ -235,11 +255,12 @@ export function renderLandingPage(opts: PageOptions): string {
     white-space: nowrap;
   }
   .hero .pill {
-    color: var(--gold-deep);
-    border: 1px solid rgba(148, 116, 59, 0.4);
-    background: rgba(200, 169, 105, 0.10);
+    color: var(--obsidian-purple-deep);
+    border: 1px solid rgba(108, 49, 227, 0.3);
+    background: rgba(108, 49, 227, 0.06);
     margin-bottom: 1.75rem;
   }
+  .pill .crystal { width: 20px; height: 20px; flex: none; }
   .hero h1 {
     font-family: var(--serif);
     font-size: clamp(2.6rem, 6.5vw, 4rem);
@@ -285,6 +306,24 @@ export function renderLandingPage(opts: PageOptions): string {
   .btn-ghost:hover { border-color: var(--ink-3); color: var(--ink); }
   .btn-gold { background: var(--gold); color: #1A1206; }
   .btn-gold:hover { opacity: 0.9; }
+  /* The primary conversion button — Obsidian purple, unmissable. */
+  .btn-obsidian {
+    background: linear-gradient(135deg, var(--obsidian-purple-hi), var(--obsidian-purple) 55%, var(--obsidian-purple-deep));
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    padding: 1.05rem 1.7rem;
+    box-shadow: 0 14px 28px -12px rgba(75, 31, 166, 0.55);
+  }
+  .btn-obsidian:hover { filter: brightness(1.08); }
+  .btn-obsidian .crystal { width: 22px; height: 22px; }
+  .cta-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.875rem; font-weight: 600;
+    color: var(--ink); text-decoration: none;
+    padding: 0.95rem 0.2rem;
+    border-bottom: 1px solid rgba(24, 36, 36, 0.25);
+  }
+  .cta-link:hover { border-bottom-color: var(--ink); }
 
   /* Hero art — the official mark as a "notebook" cover */
   .hero-art { display: flex; justify-content: center; }
@@ -541,7 +580,7 @@ export function renderLandingPage(opts: PageOptions): string {
     background: var(--ink); padding: 0 0.8rem;
     color: var(--gold); font-size: 0.8rem;
   }
-  .band .btn-gold { margin-top: 2.6rem; }
+  .band .btn { margin-top: 2.6rem; }
   .band .friction { color: var(--band-text-2); }
 
   /* ── Footer ───────────────────────────────────────────────────────────── */
@@ -578,6 +617,7 @@ export function renderLandingPage(opts: PageOptions): string {
     section.block { padding: 3.5rem 0; }
     .hero-ctas { flex-direction: column; align-items: stretch; }
     .btn { justify-content: center; }
+    .cta-link { justify-content: center; }
     .cell { padding: 1.6rem 1.3rem; }
     .stat { min-width: 50%; padding: 1.8rem 0.5rem; }
     footer { flex-direction: column; text-align: center; }
@@ -598,14 +638,14 @@ export function renderLandingPage(opts: PageOptions): string {
 
     <section class="hero">
       <div>
-        <span class="pill">✦ Obsidian plugin</span>
+        <span class="pill">${CRYSTAL_ICON} Works with Obsidian</span>
         <h1>Your Alissa workspace, inside <em>Obsidian</em>.</h1>
         <div class="hero-rule"></div>
         <p class="hero-tagline">Wikilinked &middot; Live Mirror &middot; Real Markdown</p>
         <p class="hero-sub">Alissa Sync mirrors your projects, tasks, context docs, deliverables, and entities into your vault as real markdown — and because every relationship is a wikilink, your task dependency trees and project hierarchies render in Obsidian's graph view.</p>
         <div class="hero-ctas">
-          <a class="btn btn-gold" href="#install">Install Alissa Sync <span class="arrow">→</span></a>
-          <a class="btn btn-ghost" href="${esc(studioUrl)}">Get an Alissa account</a>
+          <a class="btn btn-obsidian" href="#install">Install for Obsidian <span class="arrow">→</span></a>
+          <a class="cta-link" href="${esc(studioUrl)}">Get your Alissa account <span class="arrow">→</span></a>
         </div>
         <p class="friction">Free plugin &middot; One-way mirror &middot; Your vault stays yours</p>
       </div>
@@ -713,7 +753,7 @@ export function renderLandingPage(opts: PageOptions): string {
 
     <section id="install" class="block" style="padding-top: 0;">
       <div class="section-head">
-        <span class="overline">Install</span>
+        <span class="overline overline-crystal">${CRYSTAL_ICON} Install</span>
         <h2>Two ways in. One token.</h2>
         <p>The plugin is free and open source. You'll need an Alissa account for the API token — free to create.</p>
       </div>
@@ -749,7 +789,7 @@ export function renderLandingPage(opts: PageOptions): string {
     <p class="band-lead">Your second brain, meet your system of work.</p>
     <p class="band-em">Think in your notes. Link into the mirror.</p>
     <div class="band-rule"></div>
-    <a class="btn btn-gold" href="#install">Install Alissa Sync <span class="arrow">→</span></a>
+    <a class="btn btn-obsidian" href="#install">Install for Obsidian <span class="arrow">→</span></a>
     <p class="friction">Free plugin &middot; Token from studio.alissa.app</p>
   </section>
 
