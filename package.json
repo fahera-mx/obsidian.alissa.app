@@ -1,0 +1,19 @@
+{
+  "name": "alissa-obsidian-plugin",
+  "version": "0.1.0",
+  "description": "Alissa Sync — Obsidian community plugin",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit && node esbuild.config.mjs production",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.21.5",
+    "obsidian": "1.5.7",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5"
+  }
+}
