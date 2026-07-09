@@ -11,6 +11,9 @@ on:
 
 permissions:
   contents: write
+  # Artifact attestations (Sigstore build provenance for the release assets).
+  id-token: write
+  attestations: write
 
 jobs:
   release:
@@ -35,6 +38,16 @@ jobs:
             echo "Tag $GITHUB_REF_NAME != manifest.json version $MANIFEST_VERSION" >&2
             exit 1
           fi
+
+      # Cryptographic build provenance: proves the release assets were built
+      # by THIS workflow at THIS commit (directory-scorecard recommendation).
+      # Verify with: gh attestation verify main.js -R fahera-mx/obsidian.alissa.app
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            main.js
+            manifest.json
 
       # Release notes = this version's CHANGELOG.md section (synced from the
       # monorepo, where the changelog gate guarantees the entry exists).
