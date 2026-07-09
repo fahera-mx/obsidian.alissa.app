@@ -1,9 +1,9 @@
 {
   "id": "alissa-sync",
   "name": "Alissa Sync",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "minAppVersion": "1.5.7",
-  "description": "Mirror your Alissa vault into Obsidian: projects, tasks, context, deliverables and entities as wikilinked markdown, refreshed with one click.",
+  "description": "Mirror your Alissa vault into your notes: projects, tasks, context, deliverables and entities as wikilinked markdown, refreshed with one click.",
   "author": "fahera.mx",
   "authorUrl": "https://studio.alissa.app",
   "isDesktopOnly": false
