@@ -4,7 +4,7 @@ Mirror your [Alissa](https://studio.alissa.app) vault into Obsidian: projects,
 tasks, context, deliverables and entities as wikilinked markdown — your whole
 knowledge graph, refreshed with one click.
 
-**Website & guide:** https://obsidian.alissa.app (source under [`landing/`](landing/))
+**Website & guide:** https://obsidian.alissa.app
 
 ## Install
 
@@ -31,4 +31,4 @@ npm run build  # typecheck + production build
 ```
 
 The plugin source of truth lives in the (private) Alissa monorepo and is
-synced here; PRs are welcome for the landing page, and issues for everything.
+synced here, so code PRs cannot be merged directly — issues are welcome for everything.
