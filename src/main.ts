@@ -38,7 +38,16 @@ export default class AlissaSyncPlugin extends Plugin {
   private syncing = false;
   private intervalId: number | null = null;
 
-  async onload(): Promise<void> {
+  // Plugin.onload is typed void — do the async work in initialize() instead
+  // of an async override (directory-review lint: no promise where the base
+  // type expects void).
+  onload(): void {
+    this.initialize().catch((err: unknown) => {
+      new Notice(`Alissa Sync failed to initialize: ${(err as Error).message}`, 8_000);
+    });
+  }
+
+  private async initialize(): Promise<void> {
     await this.loadPersisted();
 
     this.addRibbonIcon("refresh-cw", "Sync Alissa vault", () => void this.runSync());

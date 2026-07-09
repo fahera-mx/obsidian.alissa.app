@@ -1,7 +1,7 @@
 {
   "id": "alissa-sync",
   "name": "Alissa Sync",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "minAppVersion": "1.5.7",
   "description": "Mirror your Alissa vault into your notes: projects, tasks, context, deliverables and entities as wikilinked markdown, refreshed with one click.",
   "author": "fahera.mx",

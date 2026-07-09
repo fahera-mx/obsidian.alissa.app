@@ -1,8 +1,13 @@
 import esbuild from "esbuild";
 import process from "node:process";
-import builtins from "builtin-modules";
+import { builtinModules } from "node:module";
 
 const prod = process.argv[2] === "production";
+
+// Node builtins stay external (Obsidian ships its own Node runtime on
+// desktop; none of them are reachable on mobile). Cover both bare and
+// node:-prefixed specifiers.
+const builtins = [...builtinModules, ...builtinModules.map((m) => `node:${m}`)];
 
 const ctx = await esbuild.context({
   entryPoints: ["src/main.ts"],

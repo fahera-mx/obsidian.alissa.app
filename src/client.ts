@@ -30,7 +30,9 @@ export interface ExportPage {
 
 const RATE_LIMIT_RETRIES = 8;
 const RATE_LIMIT_BASE_MS = 2_000;
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+// window.setTimeout (not the bare global) — popout-window compatibility per
+// the plugin guidelines.
+const sleep = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
 
 export class AlissaApi {
   constructor(
