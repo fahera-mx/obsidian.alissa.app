@@ -46,7 +46,7 @@ jobs:
           NOTES_ARGS=(--generate-notes)
           if [ -f CHANGELOG.md ]; then
             awk -v v="## $GITHUB_REF_NAME" '
-              index($0, v) == 1 { flag = 1; next }
+              $0 == v || index($0, v " ") == 1 { flag = 1; next }
               /^## / && flag { exit }
               flag { print }
             ' CHANGELOG.md > RELEASE_NOTES.md
