@@ -6,6 +6,12 @@ entry here — the sync workflow refuses to ship a bump without one, and on
 merge it auto-tags the public repo, whose release workflow publishes the
 GitHub release using this entry as the release notes.
 
+## 0.1.5 — 2026-07-09
+
+- Release assets now ship with GitHub artifact attestations (Sigstore build
+  provenance): verify that `main.js` was built from this repository with
+  `gh attestation verify main.js -R fahera-mx/obsidian.alissa.app`.
+
 ## 0.1.4 — 2026-07-09
 
 - Releases are now fully automated: a version bump merged to main auto-tags
