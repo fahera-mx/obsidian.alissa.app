@@ -25,11 +25,31 @@ export function docKey(doc: ExportDoc): string {
   return `${doc.docTable}:${doc.docId}`;
 }
 
+/** Filename from a document title: strip filesystem- and wikilink-reserved
+ *  characters, collapse whitespace, cap length, no leading/trailing dots.
+ *  Falls back to "info" (the generic basename it replaces). Keep in sync with
+ *  cli/src/commands/vault.ts (byte-parity contract). */
+export function fileTitle(title: string): string {
+  const cleaned = title
+    .replace(/[\\/:*?"<>|#^[\]]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 120)
+    .replace(/^[. ]+|[. ]+$/g, "");
+  return cleaned || "info";
+}
+
 /** Bundle-relative file path for a doc: vault path minus /vault/, plus .md.
  *  Collapses repeated slashes so a malformed server path can't produce empty
- *  segments; callers still verify with isSafeRelPath and fail LOUDLY. */
+ *  segments; callers still verify with isSafeRelPath and fail LOUDLY.
+ *  Generic `info` basenames become the entity title (TASK-845222160) —
+ *  Obsidian labels graph nodes by basename, and the parent directory keeps
+ *  the discriminated slug, so uniqueness is untouched. */
 export function docRelFile(doc: ExportDoc): string {
-  return `${doc.path.replace(/^\/+vault\//u, "").replace(/\/+/gu, "/")}.md`;
+  const rel = `${doc.path.replace(/^\/+vault\//u, "").replace(/\/+/gu, "/")}.md`;
+  if (!rel.endsWith("/info.md")) return rel;
+  const withTitle = `${rel.slice(0, -"info.md".length)}${fileTitle(doc.title)}.md`;
+  return isSafeRelPath(withTitle) ? withTitle : rel;
 }
 
 /** Reject anything that could escape the target folder — aligned with the
